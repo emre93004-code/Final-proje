@@ -1,25 +1,36 @@
-# İş İlanları Veri Seti Üzerinde NLP ve Zipf Yasası Analizi
+# Word2Vec Dil Modelleri ile Metin Benzerliği Hesaplaması ve Çok Kriterli Performans Değerlendirmesi
 
-Bu proje, yapılandırılmamış metin verilerinin (İş İlanları) Doğal Dil İşleme (NLP) teknikleri kullanılarak temizlenmesini ve dillerin istatistiksel dağılımını açıklayan Zipf Yasası'nın bu veriler üzerindeki geçerliliğinin analiz edilmesini içermektedir.
+## 📌 Yapay Zeka Dersi - Dönem Projesi Ödev-2 Raporu
+**Hazırlayanlar:** Emre Yılmaz & Hüseyin  
+**Proje Konusu:** İnsan Kaynakları Dünyasında Semantik Arama (CV - İş İlanı Eşleşmesi)  
 
-## 📝 Proje Özeti
-* **Amaç:** İş ilanlarından oluşan geniş bir korpus üzerinde metin ön işleme adımlarını uygulamak ve kelime frekanslarının teorik dağılım ile uyumunu test etmek.[cite: 1]
-* **Veri Seti:** LinkedIn/Kaggle üzerinden alınan iş ilanları (Job Postings) veri seti kullanılmıştır.[cite: 1, 2]
-* **Yöntem:** NLTK kütüphanesi ile metin temizleme (Lowercasing, Stop-words removal, Lemmatization) ve Matplotlib ile log-log ölçeğinde frekans analizi yapılmıştır.[cite: 1]
+---
 
-## 🚀 Bulgular ve Sonuç
-* **İstatistiksel Uyumluluk:** Analiz sonucunda elde edilen log-log grafiği, kelime kullanım sıklıklarının Zipf Yasası ile yüksek oranda örtüştüğünü kanıtlamıştır.[cite: 1]
-* **Sektörel Çıkarım:** İş ilanları özelinde yapılan analizde; *experience, management, skills* gibi sektörel terimlerin frekans dağılımında baskın olduğu gözlemlenmiştir.[cite: 1]
-* **Gelecek Çalışmalar:** Temizlenen veri seti, makine öğrenmesi tabanlı metin sınıflandırma ve anahtar kelime çıkarma modelleri için hazır hale getirilmiştir.[cite: 1]
+## 📝 Proje Özeti ve Vize İyileştirmeleri
+Bu çalışma, yapılandırılmamış metin verileri (İş İlanları) üzerinde farklı morfolojik yaklaşımların (Lemmatization ve Stemming) ve modern kelime gömme (**Word2Vec**) hiperparametrelerinin nihai döküman benzerlik sıralamaları üzerindeki etkisini ampirik olarak test etmektedir.
 
-## 🛠️ Kullanılan Teknolojiler
-* Python 3.x
-* Pandas (Veri manipülasyonu)
-* NLTK (Doğal Dil İşleme)
-* Matplotlib & Seaborn (Görselleştirme)
+Vize aşamasındaki (Ödev-1) jüri geri bildirimleri doğrultusunda projede şu kritik iyileştirmeler yapılmıştır:
+* **Amaç Tanımı:** Projenin İK dünyasındaki semantik eşleşme amacı netleştirilmiştir.
+* **Morfolojik Analiz Ayrımı:** Kelimelerin sözlük kökleri (`lemmatized.csv`) ve morfolojik gövdeleri (`stemmed.csv`) için ayrı ayrı veri setleri üretilerek analizler derinleştirilmiştir.
+* **Hata Savunma Mekanizması:** Giriş sorgusunda yer alan ancak modelin kelime haznesinde (vocabulary) bulunmayan kelimelerin sistemi çökertmesini engellemek adına **Sıfır Vektörü (Zero Vector)** koruması kod mimarisine entegre edilmiştir.
 
-## 📦 Kurulum
-Projeyi yerelinizde çalıştırmak için:
-1. Depoyu klonlayın: `git clone https://github.com/kullaniciadi/repo-adi.git`
-2. Gereksinimleri yükleyin: `pip install -r requirements.txt`
-3. `NLP_Metin_On_Isleme_Final.ipynb` dosyasını çalıştırın.
+---
+
+## 🛠️ Kullanılan Teknolojiler ve Bağımlılıklar
+Projenin çalıştırılabilmesi için bilgisayarınızda **Python 3.x** yüklü olmalıdır. Gerekli kütüphaneler:
+* `gensim` (Word2Vec Model Eğitimi)
+* `pandas` & `numpy` (Veri Manipülasyonu ve Matris İşlemleri)
+* `scikit-learn` (Kosinüs Benzerliği Hesaplama)
+* `seaborn` & `matplotlib` (Jaccard Isı Haritası Görselleştirme)
+* `nltk` (Doğal Dil İşleme Ön İşlemleri)
+
+---
+
+## 🚀 Çalıştırma Talimatları
+
+Hocamızın jüri değerlendirmesinde kodları tek komutla, kesintisiz ve teknik raporla birebir aynı çıktılar üretecek şekilde çalıştırabilmesi için sistem tam otomasyonlu bir terminal mimarisine indirgenmiştir.
+
+### 1. Depoyu Klonlayın ve Klasöre Geçiş Yapın
+```bash
+git clone [https://github.com/emre93004-code/Final-proje.git](https://github.com/emre93004-code/Final-proje.git)
+cd Final-proje
