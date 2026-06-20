@@ -24,9 +24,7 @@ nltk.download('stopwords', quiet=True)
 nltk.download('wordnet', quiet=True)
 nltk.download('omw-1.4', quiet=True)
 
-# ======================================================================================
-# 1. ADIM: VERİ ÖN İŞLEME VE ARA CSV DOSYALARININ ÜRETİLMESİ (VİZE ELEŞTİRİSİ ÇÖZÜMÜ)
-# ======================================================================================
+# 1. ADIM: VERİ ÖN İŞLEME VE ARA CSV DOSYALARININ ÜRETİLMESİ 
 def metin_temizle_ve_tokenize(text, method='lemma'):
     if not isinstance(text, str):
         return []
@@ -73,9 +71,7 @@ if os.path.exists('all_job_post.csv'):
 else:
     raise FileNotFoundError("KRİTİK HATA: GitHub ana dizininde 'all_job_post.csv' dosyası bulunamadı!")
 
-# ======================================================================================
 # 2. ADIM: 16 FARKLI WORD2VEC MODEL KONFİGÜRASYONUNUN EĞİTİLMESİ
-# ======================================================================================
 # Kombinasyonlar için parametre havuzunun tanımlanması
 parameters = [
     {'model_type': 'cbow', 'window': 2, 'vector_size': 100},
@@ -104,9 +100,8 @@ for data_type in ['lemmatized', 'stemmed']:
 
 print(" -> 16 benzersiz modelin eğitimi hatasız şekilde tamamlandı.")
 
-# ======================================================================================
 # 3. ADIM: HATA SAVUNMA MEKANİZMASI VE KOSİNÜS BENZERLİĞİ HESAPLAMA
-# ======================================================================================
+
 def get_mean_vector(model, words):
     """
     Rubrik Kriteri: Kelime model sözlüğünde yoksa çökmesini engelleyen 
@@ -154,9 +149,8 @@ for model_name, model in models_dict.items():
     top_5_results_per_model[model_name] = res_df['document_id'].tolist()
     objective_results[model_name] = res_df['cosine_score'].mean()
 
-# ======================================================================================
 # 4. ADIM: JACCARD SIRALAMA TUTARLILIĞI VE HEATMAP GRAFİK ÇIKTISI
-# ======================================================================================
+
 print("\n=== [4/4] Modeller Arası Jaccard Matrisi Hesaplanıyor ve Heatmap Çiziliyor ===")
 model_names = list(top_5_results_per_model.keys())
 num_models = len(model_names)
