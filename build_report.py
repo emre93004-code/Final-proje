@@ -1,58 +1,85 @@
-from docx import Document
-from docx.shared import Inches, Pt
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-import pandas as pd
+# -*- coding: utf-8 -*-
 import os
+import pandas as pd
+from docx import Document
+from docx.shared import Pt, Inches
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+from docx.enum.table import WD_TABLE_ALIGNMENT
 
-def P(doc, text, bold=False, size=12, align="left"):
-    p = doc.add_paragraph(text)
-    if bold: p.runs[0].bold = True
-    p.runs[0].font.size = Pt(size)
-    if align == "center": p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+# --- AYARLAR ---
+BASE = os.getcwd() # Colab'da bulunduğun ana dizin (/content/)
+REP = os.path.join(BASE, "rapor")
+os.makedirs(REP, exist_ok=True)
 
-def add_csv_to_doc(doc, file_name):
-    if os.path.exists(file_name):
-        P(doc, f"Veri Tablosu: {file_name}", bold=True, size=13)
-        try:
-            df = pd.read_csv(file_name)
-            # Sadece ilk 10 satırı alalım ki rapor çok uzamasın
-            df = df.head(10)
-            
-            table = doc.add_table(rows=df.shape[0]+1, cols=df.shape[1])
-            table.style = 'Table Grid'
-            for j, col_name in enumerate(df.columns):
-                table.cell(0, j).text = str(col_name)
-            for i in range(df.shape[0]):
-                for j in range(df.shape[1]):
-                    table.cell(i+1, j).text = str(df.iloc[i, j])
-            doc.add_paragraph()
-        except Exception as e:
-            P(doc, f"Dosya okunamadı: {e}")
+# Dosyaları BASE (yani /content/) içinde ara
+def load_file(filename):
+    path = os.path.join(BASE, filename)
+    if os.path.exists(path):
+        return pd.read_csv(path)
     else:
-        # Dosya yoksa hata verme, sadece bilgilendir
-        print(f"Uyarı: {file_name} dosyası bulunamadı, bu bölüm atlanıyor.")
+        print(f"UYARI: {filename} dosyası bulunamadı, kontrol et!")
+        return pd.DataFrame()
 
-# Ana Belge
+# Dosyaları yükle
+cos = load_file("cosine_eval.csv")
+sem = load_file("semantic_eval.csv")
+sw = load_file("similar_words.csv")
+top5 = load_file("top5_per_model.csv")
+jac = load_file("jaccard_matrix.csv") if os.path.exists("jaccard_matrix.csv") else pd.DataFrame()
+summary = load_file("summary.csv")
+
+if os.path.exists("query.txt"):
+    query_txt = open("query.txt", encoding="utf-8").read().strip().splitlines()
+else:
+    query_txt = ["Girdi metni bulunamadı."]
+
+# ... (Diğer fonksiyonların aynı kalacak) ...
 doc = Document()
-doc.add_heading("Proje Detaylı Analiz Raporu", 0)
+style = doc.styles["Normal"]
+style.font.name = "Calibri"
+style.font.size = Pt(11)
 
-# Elimizde OLAN dosyaların listesi
-files_to_add = [
-    "stemmed.csv",
-    "all_job_post.csv",
-    "lemmatized.csv"
-]
+def H(text, level=1): return doc.add_heading(text, level=level)
 
-# Tabloları ekle
-for f in files_to_add:
-    add_csv_to_doc(doc, f)
+def P(text, bold=False, italic=False, size=11, align=None):
+    p = doc.add_paragraph()
+    r = p.add_run(text)
+    r.bold = bold
+    r.italic = italic
+    r.font.size = Pt(size)
+    if align == "center": p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    return p
 
-# Resmi ekle
-if os.path.exists("jaccard_heatmap.png"):
-    P(doc, "Jaccard Benzerlik Isı Haritası", bold=True, size=13)
-    doc.add_picture("jaccard_heatmap.png", width=Inches(6.0))
+def bullet(text): doc.add_paragraph(text, style="List Bullet")
 
-# Kaydet
-out_file = "Detayli_Proje_Raporu.docx"
-doc.save(out_file)
-print(f"Başarılı! Rapor oluşturuldu: {out_file}")
+def df_to_table(df, header_color="2E5496", col_widths=None, font_size=8):
+    if df.empty: return
+    t = doc.add_table(rows=1, cols=len(df.columns))
+    t.style = "Light Grid Accent 1"
+    t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    hdr = t.rows[0].cells
+    for j, c in enumerate(df.columns):
+        hdr[j].text = str(c)
+        for pr in hdr[j].paragraphs:
+            for rn in pr.runs: rn.bold = True; rn.font.size = Pt(font_size)
+    for _, row in df.iterrows():
+        cells = t.add_row().cells
+        for j, c in enumerate(df.columns):
+            cells[j].text = str(row[c])
+            for pr in cells[j].paragraphs:
+                for rn in pr.runs: rn.font.size = Pt(font_size)
+    return t
+
+# --- KAPAK BİLGİLERİNİ BURADAN DÜZENLE ---
+P("YAPAY ZEKA DERSI", bold=True, size=14, align="center")
+P("Odev-2", size=12, align="center")
+doc.add_paragraph()
+P("EGITILEN WORD2VEC MODELLERI ILE", bold=True, size=18, align="center")
+P("METIN BENZERLIGI HESAPLAMA VE DEGERLENDIRME", bold=True, size=18, align="center")
+doc.add_paragraph()
+# ... (Kapak ve diğer kısımlar senin orijinal kodundaki gibi kalabilir) ...
+
+# En son kaydetme kısmını kontrol et:
+out_docx = os.path.join(REP, "Odev2_Raporu.docx")
+doc.save(out_docx)
+print("Başarılı! Rapor kaydedildi:", out_docx)
