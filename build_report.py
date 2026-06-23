@@ -15,6 +15,9 @@ def add_csv_to_doc(doc, file_name):
         P(doc, f"Veri Tablosu: {file_name}", bold=True, size=13)
         try:
             df = pd.read_csv(file_name)
+            # Sadece ilk 10 satırı alalım ki rapor çok uzamasın
+            df = df.head(10)
+            
             table = doc.add_table(rows=df.shape[0]+1, cols=df.shape[1])
             table.style = 'Table Grid'
             for j, col_name in enumerate(df.columns):
@@ -26,36 +29,23 @@ def add_csv_to_doc(doc, file_name):
         except Exception as e:
             P(doc, f"Dosya okunamadı: {e}")
     else:
-        P(doc, f"Uyarı: {file_name} bulunamadı.")
-
-def add_txt_to_doc(doc, file_name):
-    if os.path.exists(file_name):
-        P(doc, f"İçerik: {file_name}", bold=True, size=13)
-        with open(file_name, 'r', encoding='utf-8') as f:
-            content = f.read()
-            doc.add_paragraph(content)
-        doc.add_paragraph()
+        # Dosya yoksa hata verme, sadece bilgilendir
+        print(f"Uyarı: {file_name} dosyası bulunamadı, bu bölüm atlanıyor.")
 
 # Ana Belge
 doc = Document()
 doc.add_heading("Proje Detaylı Analiz Raporu", 0)
 
-# Dosyalar Listesi
+# Elimizde OLAN dosyaların listesi
 files_to_add = [
-    "kosinüs_değerlendirme.csv",
-    "semantik_değerlendirme.csv",
-    "benzer_kelimeler.csv",
-    "özet.csv",
-    "top5_per_model.csv",
-    "jaccard_matrix.csv"
+    "stemmed.csv",
+    "all_job_post.csv",
+    "lemmatized.csv"
 ]
 
 # Tabloları ekle
 for f in files_to_add:
     add_csv_to_doc(doc, f)
-
-# Metin dosyasını ekle
-add_txt_to_doc(doc, "sorgu.txt")
 
 # Resmi ekle
 if os.path.exists("jaccard_heatmap.png"):
@@ -65,4 +55,4 @@ if os.path.exists("jaccard_heatmap.png"):
 # Kaydet
 out_file = "Detayli_Proje_Raporu.docx"
 doc.save(out_file)
-print(f"Rapor oluşturuldu: {out_file}")
+print(f"Başarılı! Rapor oluşturuldu: {out_file}")
