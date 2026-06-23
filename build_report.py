@@ -1,93 +1,68 @@
 from docx import Document
 from docx.shared import Inches, Pt
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.oxml import OxmlElement
-from docx.oxml.ns import qn
+import pandas as pd
 import os
 
-# --- YARDIMCI FONKSİYONLAR (Hata almamak için bunlar şart) ---
-def create_element(name):
-    return OxmlElement(name)
-
-def create_attribute(element, name, value):
-    element.set(qn(name), value)
-
-def add_page_number(run):
-    fldChar1 = create_element('w:fldChar')
-    create_attribute(fldChar1, 'w:fldCharType', 'begin')
-    instrText = create_element('w:instrText')
-    create_attribute(instrText, 'xml:space', 'preserve')
-    instrText.text = "PAGE"
-    fldChar2 = create_element('w:fldChar')
-    create_attribute(fldChar2, 'w:fldCharType', 'separate')
-    fldChar3 = create_element('w:fldChar')
-    create_attribute(fldChar3, 'w:fldCharType', 'end')
-    run._r.append(fldChar1)
-    run._r.append(instrText)
-    run._r.append(fldChar2)
-    run._r.append(fldChar3)
-
-# Paragraf ve Başlık Yardımcıları
-doc = Document() # Belge burada tanımlanıyor, en kritik nokta burası
-
-def P(text, bold=False, size=12, align="left"):
+def P(doc, text, bold=False, size=12, align="left"):
     p = doc.add_paragraph(text)
     if bold: p.runs[0].bold = True
     p.runs[0].font.size = Pt(size)
     if align == "center": p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    return p
 
-def H(text, level):
-    return doc.add_heading(text, level=level)
+def add_csv_to_doc(doc, file_name):
+    if os.path.exists(file_name):
+        P(doc, f"Veri Tablosu: {file_name}", bold=True, size=13)
+        try:
+            df = pd.read_csv(file_name)
+            table = doc.add_table(rows=df.shape[0]+1, cols=df.shape[1])
+            table.style = 'Table Grid'
+            for j, col_name in enumerate(df.columns):
+                table.cell(0, j).text = str(col_name)
+            for i in range(df.shape[0]):
+                for j in range(df.shape[1]):
+                    table.cell(i+1, j).text = str(df.iloc[i, j])
+            doc.add_paragraph()
+        except Exception as e:
+            P(doc, f"Dosya okunamadı: {e}")
+    else:
+        P(doc, f"Uyarı: {file_name} bulunamadı.")
 
-def bullet(text):
-    return doc.add_paragraph(text, style='List Bullet')
+def add_txt_to_doc(doc, file_name):
+    if os.path.exists(file_name):
+        P(doc, f"İçerik: {file_name}", bold=True, size=13)
+        with open(file_name, 'r', encoding='utf-8') as f:
+            content = f.read()
+            doc.add_paragraph(content)
+        doc.add_paragraph()
 
-# --- ANA DOKÜMAN OLUŞTURMA ---
+# Ana Belge
+doc = Document()
+doc.add_heading("Proje Detaylı Analiz Raporu", 0)
 
-# BÖLÜM 1: KAPAK
-section_1 = doc.sections[0]
-section_1.footer.is_linked_to_previous = False
+# Dosyalar Listesi
+files_to_add = [
+    "kosinüs_değerlendirme.csv",
+    "semantik_değerlendirme.csv",
+    "benzer_kelimeler.csv",
+    "özet.csv",
+    "top5_per_model.csv",
+    "jaccard_matrix.csv"
+]
 
-P("YAPAY ZEKA DERSI", bold=True, size=16, align="center")
-P("Dönem Projesi Ödev-2 Raporu", size=14, align="center")
-doc.add_paragraph()
-P("WORD2VEC MODELLERİ İLE", bold=True, size=18, align="center")
-P("METİN BENZERLİĞİ HESAPLAMASI VE ÇOK KRİTERLİ DEĞERLENDİRME", bold=True, size=18, align="center")
-doc.add_paragraph()
-P("Proje Konusu: İnsan Kaynakları İş İlanları Metin Analizi", size=12, align="center")
-doc.add_paragraph()
-P("Hazırlayanlar", bold=True, size=13, align="center")
-P("Emre", size=12, align="center")
-P("Hüseyin", size=12, align="center")
-doc.add_paragraph()
-P("Teslim Tarihi: 15 Haziran 2026", size=11, align="center")
-doc.add_page_break()
+# Tabloları ekle
+for f in files_to_add:
+    add_csv_to_doc(doc, f)
 
-# ÖZET
-H("Özet", 1)
-P("Bu projede, iş ilanlarından oluşan veri setimiz üzerinde Word2Vec kelime gömme modellerini kullanarak dökümanlar arası anlamsal benzerlik hesaplamaları gerçekleştirdik.")
-doc.add_page_break()
+# Metin dosyasını ekle
+add_txt_to_doc(doc, "sorgu.txt")
 
-# BÖLÜM 2: ANA İÇERİK
-doc.add_section()
-section_2 = doc.sections[1]
-section_2.footer.is_linked_to_previous = False
-footer_para = section_2.footer.paragraphs[0]
-footer_para.alignment = WD_ALIGN_PARAGRAPH.RIGHT
-add_page_number(footer_para.add_run())
+# Resmi ekle
+if os.path.exists("jaccard_heatmap.png"):
+    P(doc, "Jaccard Benzerlik Isı Haritası", bold=True, size=13)
+    doc.add_picture("jaccard_heatmap.png", width=Inches(6.0))
 
-H("1. Giriş ve Akademik Amaç", 1)
-P("Bu projenin temel akademik amacı, kelimelerin boyutsal uzaydaki semantik temsillerini inşa etmektir.")
-
-H("3. Bulgular", 1)
-file_heatmap = "jaccard_heatmap.png"
-if os.path.exists(file_heatmap):
-    doc.add_picture(file_heatmap, width=Inches(6.0))
-    doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
-    P("Şekil 1: Modeller Arası Sıralama Tutarlılığı (Jaccard Isı Haritası)", size=9, align="center")
-
-# KAYDETME
-out_docx = "Emre_Huseyin_Proje_Raporu.docx"
-doc.save(out_docx)
-print(f"Başarılı! Dosya kaydedildi: {out_docx}")
+# Kaydet
+out_file = "Detayli_Proje_Raporu.docx"
+doc.save(out_file)
+print(f"Rapor oluşturuldu: {out_file}")
