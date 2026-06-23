@@ -4,10 +4,11 @@ import pandas as pd
 from docx import Document
 from docx.shared import Pt, Inches
 
-# --- DOKÜMANI BAŞLATMA (Hatanın Çözümü Burada) ---
-doc = Document() 
+# --- 1. DOKÜMANI BAŞLATMA (Hatanın Çözümü Burada) ---
+# Kodun en başında bunu tanımlıyoruz ki sonraki satırlarda hata vermesin.
+doc = Document()
 
-# --- AYARLAR ---
+# --- 2. AYARLAR ---
 BASE = os.getcwd() 
 REP = os.path.join(BASE, "rapor")
 os.makedirs(REP, exist_ok=True)
@@ -18,7 +19,7 @@ def load_file(filename):
     if os.path.exists(path):
         return pd.read_csv(path)
     else:
-        print(f"UYARI: {filename} bulunamadı!")
+        print(f"UYARI: {filename} dosyası bulunamadı!")
         return pd.DataFrame()
 
 # Tablo oluşturma fonksiyonu
@@ -37,54 +38,33 @@ def df_to_table(df, title):
         for j, c in enumerate(df.columns):
             cells[j].text = str(row[c])
 
-# --- RAPOR İÇERİĞİ ---
+# --- 3. RAPOR İÇERİĞİ ---
+# Artık 'doc' tanımlı olduğu için bu komutlar çalışacaktır
 doc.add_heading('Yapay Zeka Dersi - Ödev 2 Raporu', 0)
 
-# 1. Özet
+# Özet Tablosu
 summary = load_file("summary.csv")
 df_to_table(summary, "Proje Özeti")
-doc.add_paragraph("Bu tablo, 16 farklı model konfigürasyonu üzerinden gerçekleştirilen çalışmanın metodolojik parametrelerini özetlemektedir.")
 
-# 2. Top 5 Sonuçlar
+# 4. Sonuçlar ve Değerlendirme
 top5 = load_file("top5_per_model.csv")
 df_to_table(top5, "Modellerin İlk 5 Benzer Metin Çıktıları")
-doc.add_paragraph(
-    "Bu tablo, modellerin 'bilgi getirme' yeteneğini göstermektedir. İlk 5 doküman, "
-    "modelin sorgu ile anlamsal ilişkisini ne kadar iyi kurduğunu ve semantik boşlukları "
-    "nasıl doldurduğunu temsil eder."
-)
 
-# 3. Kosinüs Benzerliği
 cos = load_file("cosine_eval.csv")
 df_to_table(cos, "Kosinüs Benzerliği Değerlendirmesi")
-doc.add_paragraph(
-    "Kosinüs benzerliği, vektörler arasındaki açısal yakınlığı ölçer. Skorların 0.90 üzerinde "
-    "olması, modellerin başarılı bir eşleşme sağladığını gösterir. Pencere boyutu arttıkça "
-    "skorlardaki değişim, modelin bağlamı yakalama hassasiyetini yansıtır."
-)
 
-# 4. Görsel
+# Görsel ekleme
 if os.path.exists("jaccard_heatmap.png"):
     doc.add_heading("Jaccard Benzerlik Matrisi", level=2)
     doc.add_picture("jaccard_heatmap.png", width=Inches(6.0))
 
-# 5. Yorumlama
+# Tartışma ve Sonuç
 doc.add_heading("Tartışma ve Yorumlama", level=1)
-doc.add_paragraph(
-    "Pencere boyutu 2 olan modeller, yakın bağlamı daha iyi yakaladığı için daha yüksek benzerlik "
-    "skorları üretmiştir. CBOW mimarisi, iş ilanlarındaki teknik terimlerin tahmininde "
-    "daha stabil sonuçlar vermiştir. 'cbow_win2' modeli, semantik benzerliği yakalamada "
-    "en başarılı performansı sergilemiştir."
-)
+doc.add_paragraph("Pencere boyutu 2 olan modeller, yakın bağlamı daha iyi yakaladığı için daha yüksek benzerlik skorları üretmiştir. CBOW mimarisi, teknik terimlerin tahmininde daha başarılı sonuçlar vermiştir.")
 
-# 6. Sonuç
 doc.add_heading("Sonuç ve Öneriler", level=1)
-doc.add_paragraph(
-    "Word2Vec modelleri, teknik metin benzerliklerinde başarılı sonuçlar vermiştir. "
-    "Gelecek çalışmalarda Transformer (BERT vb.) tabanlı modellerin kullanılması, "
-    "benzerlik başarısını daha üst seviyelere taşıyacaktır."
-)
+doc.add_paragraph("Word2Vec modelleri teknik metin benzerliklerinde başarılı olmuştur. Gelecek çalışmalarda Transformer tabanlı modellerin kullanımı, benzerlik başarısını artırabilir.")
 
-# Kaydet
+# --- 4. KAYDETME ---
 doc.save(os.path.join(REP, "Odev2_Raporu.docx"))
 print("Rapor başarıyla oluşturuldu: /rapor/Odev2_Raporu.docx")
