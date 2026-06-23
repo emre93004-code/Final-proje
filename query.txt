@@ -1,17 +1,2 @@
-# KATEGORİ 1: Teknik Yetkinlikler (Modelin konu yakalama başarısını test eder)
-yazilim muhendisi
-veri bilimi
-sql veritabani
-python gelistirici
-
-# KATEGORİ 2: Kurumsal Kültür (Modelin soyut kavramları anlama başarısını test eder)
-esnek calisma
-ekip ruhu
-uzaktan calisma
-kariyer gelisimi
-
-# KATEGORİ 3: Duygu Analizi / Yorumlar (Raporundaki 'yorum_metni' başarılarını doğrulamak için)
-harika calisma ortami
-yonetim zayif
-maas tatmin edici
-hizli geri donus
+senior_business_partner 
+talent_acquisition_experience
