@@ -70,7 +70,7 @@ df_to_table(doc, cos, "Kosinüs Benzerliği Değerlendirmesi (Modellerin Genel �
 
 # --- Tablo 3: Modellerin İlk 5 Benzer Metin Çıktıları ---
 # Yüklediğin dosya adına uygun olarak güncellendi
-top5 = load_file("final_similarity_results (1).csv")
+top5 = load_file("final_similarity_results.csv")
 df_to_table(doc, top5, "Modellerin İlk 5 Benzer Metin Çıktıları")
 
 # --- Tablo 4: Jaccard Matrisi (Ek Analiz Bölümü) ---
