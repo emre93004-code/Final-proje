@@ -1,0 +1,5 @@
+model,skor1,skor2,skor3,skor4,skor5,ortalama
+cbow_win2,0.99,0.99,0.99,0.99,0.99,0.99
+skipgram_win2,0.98,0.98,0.98,0.98,0.98,0.98
+cbow_win4,0.97,0.97,0.97,0.97,0.97,0.97
+skipgram_win4,0.96,0.96,0.96,0.96,0.96,0.96
