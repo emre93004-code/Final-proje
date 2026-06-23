@@ -1,5 +1,0 @@
-model,p1,p2,p3,p4,p5,ortalama_anlamsal
-cbow_win2,5,5,4,5,5,4.8
-skipgram_win2,4,5,5,4,5,4.6
-cbow_win4,4,4,4,5,4,4.2
-skipgram_win4,3,4,3,4,3,3.4
