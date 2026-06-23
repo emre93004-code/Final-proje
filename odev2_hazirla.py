@@ -111,3 +111,11 @@ plt.title("Modeller Arası Jaccard Benzerlik Matrisi")
 plt.tight_layout()
 plt.savefig(f"{output_folder}/jaccard_heatmap.png")
 print("Isı haritası kaydedildi.")
+# --- ODEV2_HAZIRLA.PY SONUNA EKLENMESİ GEREKENLER ---
+# Build_report.py dosyasının beklediği isimlerle dosyaları kaydediyoruz:
+pd.DataFrame(cosine_eval_data).to_csv('cosine_eval.csv', index=False)
+pd.DataFrame(semantic_template_data).to_csv('semantic_eval.csv', index=False)
+pd.DataFrame(similar_words_data).to_csv('similar_words.csv', index=False)
+pd.DataFrame(top5_data).to_csv('top5_per_model.csv', index=False)
+pd.DataFrame(jaccard_matrix_data).to_csv('jaccard_matrix.csv', index=False)
+# summary.csv'yi burada oluşturmayı unutma!
