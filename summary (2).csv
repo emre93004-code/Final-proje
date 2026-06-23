@@ -1,0 +1,5 @@
+model,ortalama_cosine,ortalama_anlamsal
+cbow_win2,0.99,4.8
+skipgram_win2,0.98,4.6
+cbow_win4,0.97,4.2
+skipgram_win4,0.96,3.4
