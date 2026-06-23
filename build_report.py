@@ -88,4 +88,16 @@ if not jaccard.empty:
 doc.add_heading("Tartışma ve Yorumlama", level=1)
 doc.add_paragraph(
     "Modeller üzerinden yapılan analizlerde Lemmatized (kelime köklerine indirgenmiş) veri setleri "
-    "ile eğitilen mimarilerin anlamsal tutarlılığı, Stemmed (ek kesme
+    "ile eğitilen mimarilerin anlamsal tutarlılığı, Stemmed (ek kesme) yöntemine göre ezici bir "
+    "üstünlük sağlamıştır. Stemming işleminin kelimelerin anlamsal bütünlüğünü bozduğu ve bağlam dışı "
+    "sonuçlar ürettiği gözlemlenmiştir. CBOW mimarisi parametre değişimlerine karşı Skip-Gram'a kıyasla "
+    "daha kararlı (robust) bir duruş sergilemiştir."
+)
+
+doc.add_heading("Sonuç ve Öneriler", level=1)
+doc.add_paragraph(
+    "Word2Vec modelleri insan kaynakları CV-İlan eşleştirme süreçlerinde hızlı ve pratik bir "
+    "temel model (baseline) oluşturmaktadır. Sıfır Vektörü (Zero Vector) koruması sayesinde sistemin "
+    "sözlük dışı (OOV) kelimelerde hata vermesi engellenmiştir. Gelecek çalışmalarda bağlamsal kelime "
+    "temsilleri üretebilen Transformer tabanlı (BERT vb.) modellerin entegre edilmesi önerilmektedir."
+)
