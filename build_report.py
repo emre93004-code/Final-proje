@@ -3,21 +3,23 @@ import os
 import pandas as pd
 from docx import Document
 from docx.shared import Pt, Inches
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.enum.table import WD_TABLE_ALIGNMENT
+
+# --- DOKÜMANI BAŞLATMA (Hatanın Çözümü Burada) ---
+doc = Document() 
 
 # --- AYARLAR ---
 BASE = os.getcwd() 
 REP = os.path.join(BASE, "rapor")
 os.makedirs(REP, exist_ok=True)
-doc = Document()
 
 # Dosya yükleme yardımcısı
 def load_file(filename):
     path = os.path.join(BASE, filename)
     if os.path.exists(path):
         return pd.read_csv(path)
-    return pd.DataFrame()
+    else:
+        print(f"UYARI: {filename} bulunamadı!")
+        return pd.DataFrame()
 
 # Tablo oluşturma fonksiyonu
 def df_to_table(df, title):
@@ -35,7 +37,7 @@ def df_to_table(df, title):
         for j, c in enumerate(df.columns):
             cells[j].text = str(row[c])
 
-# --- RAPORU İNŞA ET ---
+# --- RAPOR İÇERİĞİ ---
 doc.add_heading('Yapay Zeka Dersi - Ödev 2 Raporu', 0)
 
 # 1. Özet
