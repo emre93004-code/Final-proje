@@ -1,5 +1,0 @@
-model,anahtar_kelime,en_yakin_5_kelime
-cbow_win2,premium,"sub, worth, helpful, unlock, extra"
-skipgram_win2,premium,"sub, worth, help, unlock, pro"
-cbow_win4,premium,"sub, worth, fix, app, fee"
-skipgram_win4,premium,"sub, pay, bug, app, slow"
