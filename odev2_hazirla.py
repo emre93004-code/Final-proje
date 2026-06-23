@@ -119,3 +119,11 @@ pd.DataFrame(similar_words_data).to_csv('similar_words.csv', index=False)
 pd.DataFrame(top5_data).to_csv('top5_per_model.csv', index=False)
 pd.DataFrame(jaccard_matrix_data).to_csv('jaccard_matrix.csv', index=False)
 # summary.csv'yi burada oluşturmayı unutma!
+# --- summary.csv dosyasını oluşturma ---
+summary_data = {
+    'Baslik': ['Model Sayısı', 'Veri Seti', 'Kullanılan Yöntemler', 'Vector Boyutları', 'Window Size'],
+    'Deger': ['16', 'all_job_post.csv', 'Word2Vec (CBOW ve Skip-Gram)', '100 ve 300', '2 ve 4']
+}
+
+pd.DataFrame(summary_data).to_csv('summary.csv', index=False, encoding='utf-8')
+print(" -> summary.csv başarıyla oluşturuldu.")
