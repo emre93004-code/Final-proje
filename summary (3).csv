@@ -1,0 +1,6 @@
+Baslik,Deger
+Model Sayısı,16
+Veri Seti,all_job_post.csv
+Kullanılan Yöntemler,Word2Vec (CBOW ve Skip-Gram)
+Vector Boyutları,100 ve 300
+Window Size,2 ve 4
