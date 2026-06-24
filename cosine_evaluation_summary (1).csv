@@ -1,0 +1,17 @@
+Model_Adı,Skor_1,Skor_2,Skor_3,Skor_4,Skor_5,Ortalama_Skor
+word2vec_cbow_w2_d100_lemma.model,0.9057,0.8893,0.8832,0.8831,0.8813,0.8885
+word2vec_cbow_w2_d100_stem.model,0.8982,0.8919,0.8815,0.881,0.8786,0.8862
+word2vec_cbow_w2_d300_lemma.model,0.9055,0.893,0.8819,0.8814,0.8807,0.8885
+word2vec_cbow_w2_d300_stem.model,0.902,0.8954,0.8842,0.8807,0.8798,0.8884
+word2vec_cbow_w4_d100_lemma.model,0.8962,0.8733,0.8616,0.857,0.8515,0.8679
+word2vec_cbow_w4_d100_stem.model,0.8781,0.8756,0.8591,0.8565,0.8529,0.8644
+word2vec_cbow_w4_d300_lemma.model,0.8903,0.8728,0.8556,0.8546,0.8521,0.8651
+word2vec_cbow_w4_d300_stem.model,0.8874,0.8779,0.8716,0.8691,0.8615,0.8735
+word2vec_sg_w2_d100_lemma.model,0.9067,0.904,0.9033,0.8998,0.8984,0.9024
+word2vec_sg_w2_d100_stem.model,0.9067,0.9042,0.9017,0.9012,0.8989,0.9025
+word2vec_sg_w2_d300_lemma.model,0.8908,0.8854,0.8832,0.8823,0.8786,0.8841
+word2vec_sg_w2_d300_stem.model,0.8917,0.8916,0.8915,0.8914,0.8887,0.891
+word2vec_sg_w4_d100_lemma.model,0.888,0.8866,0.8847,0.8816,0.8753,0.8832
+word2vec_sg_w4_d100_stem.model,0.8954,0.8942,0.8924,0.8919,0.8885,0.8925
+word2vec_sg_w4_d300_lemma.model,0.873,0.8692,0.8687,0.866,0.8588,0.8671
+word2vec_sg_w4_d300_stem.model,0.8701,0.8689,0.8683,0.8673,0.8653,0.868
